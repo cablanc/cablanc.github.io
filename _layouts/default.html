@@ -37,7 +37,12 @@
           <li><a href="{{ site.github.repository_url }}">View On <strong>GitHub</strong></a></li>
         </ul>
         {% endif %}
+
+	{% for member in site.data.members %}
+	<h4><a href= {{member.url}}>{{member.title}}</a></h4>
+	{% endfor %}
       </header>
+
       <section>
 
       {{ content }}

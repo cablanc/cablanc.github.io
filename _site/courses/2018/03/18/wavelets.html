@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Wavelets | Christine Allen-Blanchette</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Wavelets" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In these notes we cover wavelets, their application and how they relate to other signal decomposition approaches." />
+<meta property="og:description" content="In these notes we cover wavelets, their application and how they relate to other signal decomposition approaches." />
+<link rel="canonical" href="http://localhost:4000/courses/2018/03/18/wavelets.html" />
+<meta property="og:url" content="http://localhost:4000/courses/2018/03/18/wavelets.html" />
+<meta property="og:site_name" content="Christine Allen-Blanchette" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-03-18T00:00:00-04:00" />
+<script type="application/ld+json">
+{"headline":"Wavelets","dateModified":"2018-03-18T00:00:00-04:00","datePublished":"2018-03-18T00:00:00-04:00","description":"In these notes we cover wavelets, their application and how they relate to other signal decomposition approaches.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/courses/2018/03/18/wavelets.html"},"@type":"BlogPosting","url":"http://localhost:4000/courses/2018/03/18/wavelets.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=daeb3a0bb95b9e81ebe7bb9e880e9af384ee1eb3">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">Christine Allen-Blanchette</a></h1>
+        
+        
+
+        <p></p>
+
+        
+        <p class="view"><a href="https://github.com/cablanc/cablanc.github.io">View the Project on GitHub <small>cablanc/cablanc.github.io</small></a></p>
+        
+
+        
+
+        
+
+	
+	<h4><a href= /page1.html>Courses</a></h4>
+	
+	<h4><a href= /readings.html>Readings</a></h4>
+	
+	<h4><a href= /cv.pdf>CV</a></h4>
+	
+      </header>
+
+      <section>
+
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script> 
+<small>18 March 2018</small>
+<h1>Wavelets</h1>
+
+<p>In these notes we cover wavelets, their application and how they relate to other signal decomposition approaches.</p>
+
+<p><a name="motivation"></a></p>
+<h2 id="motivation">motivation</h2>
+
+<p>The idea of using frequency decomposition as a mode of image processing is found in many applications 
+(e.g. compression, pattern recognition). This was discussed in the Fourier analysis lectures and is strongly 
+related to the multiresolution image processing lecture.</p>
+
+<p>Often, structures whose recognition and analysis are necessary for image-related task (e.g. recognition) are not of a constant scale.
+A critique of Fourier decomposition is that it allows for the identification of various frequencies but only at a global scale.
+This <em>can</em> be addressed through use of the windowed Fourier transform; however, localization remains a challenge since the required
+spatial and frequency samplings are fixed. A multiresolution decomposition offers a coarse-to-fine approach to representing
+image information. The Laplacian pyramid can be computed quickly, however, there is some redundancy in the information encoded in 
+adjacent pyramid levels. Additionally, there is no orientation selectivity in the decomposition which can inconvenience pattern recognition/analysis.
+Wavelets, as presented in <a href="https://goo.gl/73zcEB">@mallat1989multifrequency</a>, address these issues.</p>
+
+<p><a name="wavelets"></a></p>
+<h1 id="and-now-wavelets">And now wavelets</h1>
+
+<p><a name="what"></a></p>
+<h2 id="what-are-wavelets">what are wavelets?</h2>
+
+<p>A wavelet transform is a decomposition onto translated and dilated copies of a function \(\psi(x)\) called a wavelet.</p>
+
+<p><img src="../figures/wavelet.png" alt="img" title="Adapted from [@mallat1989theory](https://goo.gl/XhFu72)" /></p>
+
+<p>As defined by Morlet, the translated and dilated copies of \(\psi(x)\) are the family of functions
+\({\psi_s(x - u)}_{(s,u)\in\mathbb{R}^2}\) where \(\psi_s(x) = \sqrt{ s}\psi(sx)\), and the wavelet transform is 
+is expressed by the inner-products</p>
+
+<script type="math/tex; mode=display">Wf(s,u) = \langle f(x), \psi_s(x-u) \rangle.</script>
+
+<p><a name="where"></a></p>
+<h2 id="where-do-they-come-from">where do they come from?</h2>
+
+<p>These are details you may or may not care about but they offer some (historical) context.</p>
+
+<p><a name="qmf"></a></p>
+<h3 id="quadrature-mirror-filters">Quadrature mirror filters</h3>
+
+<p>The goal in signal compression is to minimize the amount of information stored without compromising perceptuability.
+To achieve this, compression is often preceeded by <a href="https://en.wikipedia.org/wiki/Sub-band_coding">sub-band</a> decomposition (breaking the signal up into frequency bands). 
+This procedure is useful in mitigating the perceptual impact of digitization (sampling) and quantization (rounding)
+by exploiting knowedge of the perceptual system’s sensitivity to these errors in different frequency bands.</p>
+
+<p>Quadrature mirror filters, <a href="https://goo.gl/KyLMXq">@esteban1977application</a>, are a pair of filters used to decompose a signal into two components.
+These filters, \(h_1\) and \(h_2\) are half-band mirror filters (i.e. \(h_1(x) = h_2(-x)\)) with Fourier transforms 
+\(H_1(e^{j\omega T})\) and \(H_2(e^{\pi-\omega T})\) of equal magnitude. Since each component resulting from the decomposition occupies only half the bandwidth 
+of the original signal, the Nyquist sampling rate of these components is <strong>only half</strong> that of the original signal.</p>
+
+<p><a name="multires"></a></p>
+<h3 id="multiresolution-decomposition">Multiresolution decomposition</h3>
+
+<p>A multiresolution (pyramidal) decomposition is a method of expressing a \(L^2\)-function as the limit of successive
+approximations with increasingly concentrated smoothing <a href="https://goo.gl/8FLhBs">@daubechies1988orthonormal</a>,
+the Laplacian pyramid is an example of this. Each level in the pyramid is an approximation or representation of the image at a different scale
+or resolution. For ease of computation it is common to use a log-scale pyramid (i.e. for an image of dimension \(N^2\) (even), 
+each pyramid level \(j\) has dimension \(N^2*2^{-j}\), \(j&gt;0\))</p>
+
+<p><img src="../figures/multires_approx.png" alt="img" title="Adapted from [@mallat1989multifrequency](https://goo.gl/73zcEB)" /></p>
+
+<p>The construction of a multiresolution representation is formalized in <a href="https://goo.gl/73zcEB">@mallat1989multifrequency</a>, the gist is given here for convenience. 
+For a function \(f(x)\) its multiresolution approximation can be expressed as the sequence \((A_{2^j}f(x))<em>{j\in\mathbb{Z}}\). Each approximation 
+\(A</em>{2^j}f(x)\) is the best approximation of \(f(x)\) in the vectorspace \(V_{2^j}\); \(A_{2^j}f(x)\in V_{2^j} \forall j\).
+In <a href="https://goo.gl/XhFu72">@mallat1989theory</a> Mallat refers to the sequence \((V_{2^j})<em>{j\in\mathbb{Z}}\) as the *multiresolution approximation* and asserts (in Theorem 1 <a href="https://goo.gl/XhFu72">@mallat1989theory</a>)
+that for each multiresolution approximation there exists a unique <strong>scaling function</strong> \(\phi(x)\in L^2(\mathbb{R}^n)\) with 
+\(\phi</em>{2^j} = 2^j\phi(2^j x)\) so that \((\sqrt{2^{-j}}\phi_{2^j}(x - 2^j n))<em>{n\in\mathbb{Z}}\) is an orthormal basis for \(V</em>{2^j}\). 
+Because of this, each approximation can be expressed in the decomposition</p>
+
+<script type="math/tex; mode=display">A_{2^j}f(x) = 2^{-j}\sum_{n\in\mathbb{Z}} \langle f(x), \phi_{2^j}(x - 2^j n)\rangle\, \phi_{2^j}(x - 2^j n) \\
+= 2^{-j}\sum_{n\in\mathbb{Z}} (f(x)* \phi_{2^j}(-x)) \,\phi_{2^j}(x - 2^j n)</script>
+
+<p><img src="../figures/scaling_fcn.png" alt="img" title="Adapted from [@mallat1989multifrequency](https://goo.gl/73zcEB)" /></p>
+
+<p><a name="why"></a></p>
+<h2 id="why-do-we-care-about-them">why do we care about them?</h2>
+
+<p>The idea of representing a signal by the coefficients of its decomposition is not new to us (e.g. linear algebra, Fourier analysis, etc) 
+but there are some interesting things going on with wavelets.</p>
+
+<ol>
+  <li>By construction a wavelet transform is a decomposition onto frequency bands with the same size on a log scale.</li>
+  <li>Wavelets form an orthonormal basis for \(L^2(\mathbb{R}^n)\) so the decomposition is not redundant.</li>
+  <li>The zero-crossing wavelet representation is translation equivariant</li>
+</ol>
+
+<p><a name="how"></a></p>
+<h2 id="how-do-we-use-them">how do we use them</h2>
+
+
+
+  <small>tags: <em></em></small>
+
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="https://github.com/cablanc">cablanc</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    
+  </body>
+</html>

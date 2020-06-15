@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Laplacian Pyramids | Christine Allen-Blanchette</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Laplacian Pyramids" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="These notes cover the construction and theory of Gaussian and Laplacian pyramids, and the SIFT detector/descriptor. Multiresolution representations such as image pyramids were introduced primarily to improve the computational costs of pattern analysis and image matching @crowley2002fast. With a multiresolution representation structures of different scales can be analyzed with a filter of the same scale. The image pyramid is often credited with improving the computational efficiency of pattern matching since it facilitates a coarse-to-fine search strategy; search begins at the coarsest representation (the top of the pyramid) and is refined at subsequent pyramid level." />
+<meta property="og:description" content="These notes cover the construction and theory of Gaussian and Laplacian pyramids, and the SIFT detector/descriptor. Multiresolution representations such as image pyramids were introduced primarily to improve the computational costs of pattern analysis and image matching @crowley2002fast. With a multiresolution representation structures of different scales can be analyzed with a filter of the same scale. The image pyramid is often credited with improving the computational efficiency of pattern matching since it facilitates a coarse-to-fine search strategy; search begins at the coarsest representation (the top of the pyramid) and is refined at subsequent pyramid level." />
+<link rel="canonical" href="http://localhost:4000/courses/2018/04/03/laplacian-pyramid.html" />
+<meta property="og:url" content="http://localhost:4000/courses/2018/04/03/laplacian-pyramid.html" />
+<meta property="og:site_name" content="Christine Allen-Blanchette" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-04-03T00:00:00-04:00" />
+<script type="application/ld+json">
+{"headline":"Laplacian Pyramids","dateModified":"2018-04-03T00:00:00-04:00","datePublished":"2018-04-03T00:00:00-04:00","description":"These notes cover the construction and theory of Gaussian and Laplacian pyramids, and the SIFT detector/descriptor. Multiresolution representations such as image pyramids were introduced primarily to improve the computational costs of pattern analysis and image matching @crowley2002fast. With a multiresolution representation structures of different scales can be analyzed with a filter of the same scale. The image pyramid is often credited with improving the computational efficiency of pattern matching since it facilitates a coarse-to-fine search strategy; search begins at the coarsest representation (the top of the pyramid) and is refined at subsequent pyramid level.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/courses/2018/04/03/laplacian-pyramid.html"},"@type":"BlogPosting","url":"http://localhost:4000/courses/2018/04/03/laplacian-pyramid.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=daeb3a0bb95b9e81ebe7bb9e880e9af384ee1eb3">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">Christine Allen-Blanchette</a></h1>
+        
+        
+
+        <p></p>
+
+        
+        <p class="view"><a href="https://github.com/cablanc/cablanc.github.io">View the Project on GitHub <small>cablanc/cablanc.github.io</small></a></p>
+        
+
+        
+
+        
+
+	
+	<h4><a href= /page1.html>Courses</a></h4>
+	
+	<h4><a href= /readings.html>Readings</a></h4>
+	
+	<h4><a href= /cv.pdf>CV</a></h4>
+	
+      </header>
+
+      <section>
+
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script> 
+<small>3 April 2018</small>
+<h1>Laplacian Pyramids</h1>
+
+<p>These notes cover the construction and theory of Gaussian and Laplacian pyramids, and the SIFT detector/descriptor.
+Multiresolution representations such as image pyramids were introduced primarily to improve the computational costs of pattern analysis
+and image matching <a href="https://goo.gl/QGupMh">@crowley2002fast</a>. With a multiresolution representation structures of different scales can be analyzed with 
+a filter of the same scale. The image pyramid is often credited with improving the computational efficiency of 
+pattern matching since it facilitates a coarse-to-fine search strategy; search begins at the coarsest representation (the top of the pyramid) 
+and is refined at subsequent pyramid level.</p>
+
+<h1 id="the-gaussian-pyramid">The Gaussian pyramid<a id="sec-2" name="sec-2"></a></h1>
+
+<p>The Gaussian pyramid is a multiresolution image representation with images in sequential pyramid levels, \(p_l(x,y)\) and \(p_{l+1}(x,y)\) 
+related by</p>
+
+<script type="math/tex; mode=display">\tilde{p}_{l+1} = p_l * g_{\sigma}\\
+p_{l+1} = \tilde{p}_{l+1}(2x, 2y)</script>
+
+<p>where \(g_{\sigma}\) is a 2-dimensional Gaussian filter.</p>
+
+<p>In the continuous setting a scale equivariant pyramid can be constructed with any filter; however, unless the image is bandlimited and 
+the filter is carefully chosen the compuational cost can be prohibitive <a href="https://goo.gl/QGupMh">@crowley2002fast</a>. The Gaussian filter is particularly nice 
+for this task since it is separable, and convolving it with itself is akin to scaling.</p>
+
+<p>In the Gaussian pyramid implementation of <a href="https://goo.gl/U4YjLK">@burt1983laplacian</a>, the Gaussian filter is approximated by a normalized and symmetric
+equivalent weighting function. An equivalent weighting function is chosen to ensure equal contribution, i.e. all nodes at a given layer
+contribute equally to the construction of the subsequent layer <a href="https://goo.gl/U4YjLK">@burt1983laplacian</a>. A length 5 filter is equivalent weighting function
+if it has the following structure:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{bmatrix}
+c & b & a & b & c 
+\end{bmatrix} %]]></script>
+
+<p>where \(b=1/4\) and \(c = b - a/2\).</p>
+
+<p><img src="../figures/equi_weight_fcn.png" alt="img" title="Adapted from  [@burt1983laplacian](https://goo.gl/U4YjLK)" /></p>
+
+<p>The best approximation to the Gaussian is achieved with \(a=0.4\). The resulting six level Gaussian pyramid is shown below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="n">plt</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+    
+    <span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">data</span>
+    <span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">convolve2d</span>
+    
+    <span class="k">def</span> <span class="nf">disp_fmt_pyr</span><span class="p">(</span><span class="n">pyr</span><span class="p">):</span>
+        <span class="s">"""
+        Visualize the Gaussian pyramid
+        """</span>
+        <span class="n">num_levels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+    
+        <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">pyr</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">shape</span>
+    
+        <span class="n">img_heights</span> <span class="o">=</span> <span class="p">[</span> <span class="n">H</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_levels</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span> <span class="n">img_heights</span> <span class="p">))</span>
+    
+        <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">))</span>
+    
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_levels</span><span class="p">):</span>
+            <span class="n">rstart</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">img_heights</span><span class="p">[:</span><span class="n">i</span><span class="p">]))</span>
+            <span class="n">rend</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">int</span><span class="p">(</span><span class="n">rstart</span> <span class="o">+</span> <span class="n">img_heights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
+            <span class="n">out</span><span class="p">[</span><span class="n">rstart</span><span class="p">:</span><span class="n">rend</span><span class="p">,</span> <span class="p">:</span><span class="n">np</span><span class="p">.</span><span class="nb">int</span><span class="p">(</span><span class="n">img_heights</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span> <span class="o">=</span> <span class="n">pyr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    
+        <span class="k">return</span> <span class="n">out</span>
+    
+    
+    <span class="k">def</span> <span class="nf">gauss_pyr</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+        <span class="s">"""
+        Compute the Gaussian pyramid
+    
+        Inputs:
+        - img: Input image of size (N,M)
+        - levels: Number of stages for the Gaussian pyramid
+    
+        Returns:
+        A tuple of levels images 
+        """</span>
+    
+        <span class="c1"># approximate length 5 Gaussian filter using binomial filter
+</span>        <span class="n">a</span> <span class="o">=</span> <span class="mf">0.4</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="mi">4</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="mi">4</span> <span class="o">-</span> <span class="n">a</span><span class="o">/</span><span class="mi">2</span>
+    
+        <span class="n">filt</span> <span class="o">=</span>  <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">]])</span>
+    
+        <span class="c1"># approximate 2D Gaussian
+</span>        <span class="c1"># filt = convolve2d(filt, filt.T)
+</span>    
+        <span class="n">pyr</span> <span class="o">=</span> <span class="p">[</span><span class="n">img</span><span class="p">]</span>
+    
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">levels</span><span class="p">):</span>
+            <span class="c1"># zero pad the previous image for convolution
+</span>            <span class="c1"># boarder of 2 since filter is of length 5
+</span>            <span class="n">p_0</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">pad</span><span class="p">(</span> <span class="n">pyr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">mode</span><span class="o">=</span><span class="s">'constant'</span> <span class="p">)</span>
+    
+            <span class="c1"># convolve in the x and y directions to construct p_1
+</span>            <span class="n">p_1</span> <span class="o">=</span> <span class="n">convolve2d</span><span class="p">(</span> <span class="n">p_0</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="s">'valid'</span> <span class="p">)</span>
+            <span class="n">p_1</span> <span class="o">=</span> <span class="n">convolve2d</span><span class="p">(</span> <span class="n">p_1</span><span class="p">,</span> <span class="n">filt</span><span class="p">.</span><span class="n">T</span><span class="p">,</span> <span class="s">'valid'</span> <span class="p">)</span>
+    
+            <span class="c1"># DoG approximation of LoG
+</span>            <span class="n">pyr</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">p_1</span><span class="p">[::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span> <span class="p">)</span>
+    
+        <span class="k">return</span> <span class="n">pyr</span>
+    
+    
+    <span class="n">camera</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">camera</span><span class="p">()</span>
+    <span class="n">pyr</span> <span class="o">=</span> <span class="n">gauss_pyr</span><span class="p">(</span><span class="n">camera</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">disp_fmt_pyr</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">'figures/gauss_pyr.png'</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s">"tight"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="s">'figures/gauss_pyr.png'</span>
+</code></pre></div></div>
+
+<p><img src="../figures/gauss_pyr.png" alt="img" title="Gaussian pyramid" /></p>
+
+<h2 id="a-closer-look">A closer look<a id="sec-2-1" name="sec-2-1"></a></h2>
+
+<p>For simplicity we consider first the pyramid constructed without subsampling, i.e.
+the pyramid with adjacent pyramid levels related by the following</p>
+
+<script type="math/tex; mode=display">\tilde{p}_{l+1} = p_l * g_{\sigma}\\
+p_{l+1} = \tilde{p}_{l+1}</script>
+
+<p>We arrive at image \(p_{l}\) by convolving the original image with \(g_{\sigma}\) \(l\) times,</p>
+
+<script type="math/tex; mode=display">p_l = p_0 * \underbrace{g_\sigma \dots * g_\sigma}_l</script>
+
+<h3 id="what-is-the-effective-sigma-at-level-l">What is the “effective” \(\sigma\) at level \(l\)?<a id="sec-2-1-1" name="sec-2-1-1"></a></h3>
+
+<p>Convolving a Gaussian with itself \(l\) times produces a new Gaussian \(g_{\sigma’}\) with 
+\(\sigma’ = \sqrt{\underbrace{\sigma^2 + \dots + \sigma^2}_l}\) (we call \(\sigma’\) the “effective” \(\sigma\)). 
+This is easily shown if we use the Fourier transform,</p>
+
+<script type="math/tex; mode=display">g_\sigma * \dots * g_\sigma = \mathcal{F}^{-1}\mathcal{F}\left( g_\sigma * \dots * g_\sigma\right) \\
+= \mathcal{F}^{-1}\left(\mathcal{F} g_\sigma \dots \mathcal{F} g_\sigma\right).</script>
+
+<p>Since</p>
+
+<script type="math/tex; mode=display">\mathcal{F} g_\sigma = e^{-\sigma^2\omega^2/2},</script>
+
+<p>(see the proof in <a href="https://goo.gl/TvJTof">@derpanis2005fourier</a>, its a one page document)</p>
+
+<script type="math/tex; mode=display">\mathcal{F}^{-1}\left(\mathcal{F} g_\sigma \dots \mathcal{F} g_\sigma\right) = 
+\mathcal{F}^{-1}\left( e^{-\sigma^2\omega^2/2} \dots e^{-\sigma^2\omega^2/2}\right)\\
+= \mathcal{F}^{-1}\left( e^{-l\sigma^2\omega^2/2} \right)\\
+= g_\sigma'</script>
+
+<p>with \(\sigma’ = \sqrt{l}\sigma\).</p>
+
+<h3 id="what-is-the-relationship-between-pyramid-levels">What is the relationship between pyramid levels?<a id="sec-2-1-2" name="sec-2-1-2"></a></h3>
+
+<p>The blur/width/\(\sigma\) associated with \(p_l\) is \(\sqrt{l}\sigma\), and that of \(p_{l+1}\) is \(\sqrt{l+1}\sigma\). The utility of this relationship
+is not particularly obvious; however, it is useful in informing our approach to a pyramidal algorithm. 
+Through an understanding of this relationship the Laplacian pyramid can be obtained from a Gaussian pyramid in which sequential pyramid levels
+have scales/”effective” \(\sigma\) which differ by a factor of \(\sqrt{2}\).</p>
+
+<h1 id="the-laplacian-pyramid">The Laplacian pyramid<a id="sec-3" name="sec-3"></a></h1>
+
+<p>The Laplacian pyramid is a multiresolution representation derived from a Gaussian pyramid by taking the difference of sequential Gaussian pyramid levels.
+The approach is seen as an improvement on the Gaussian pyramid since pyramid levels are largely decorrelated <a href="https://goo.gl/U4YjLK">@burt1983laplacian</a>.
+The original approach, introduced in 1983 by Burt and Adelson <a href="https://goo.gl/U4YjLK">@burt1983laplacian</a>, was later improved upon by <a href="https://goo.gl/QGupMh">@crowley2002fast</a> where a different 
+“Gaussian” filter is used and only the difference of select pyramid levels is taken.</p>
+
+<p>In <a href="https://goo.gl/QGupMh">@crowley2002fast</a> the Gaussian pyramid is constructed using a binomial filter which approximates a Gaussian with \(\sigma=1\). Difference between 
+pyramid levels are taken such that the ratio of scale to sample rate is constant <a href="https://goo.gl/QGupMh">@crowley2002fast</a>.</p>
+
+<h2 id="a-gaussian-pyramid-with-constant-ratio-of-scales">A Gaussian pyramid with constant ratio of scales<a id="sec-3-1" name="sec-3-1"></a></h2>
+
+<p>In the previous section, we followed the work of Burt and Adelson <a href="https://goo.gl/U4YjLK">@burt1983laplacian</a>, to construct a Gaussian pyramid 
+with a relationship of \(\frac{\sqrt{l+1}}{\sqrt{l}}\sigma\) between sequential pyramid levels. The work of <a href="https://goo.gl/QGupMh">@crowley2002fast</a> introduces a Gaussian 
+pyramid with a fixed relationship between sequential pyramid levels by exploing the fact that the ratio of “effective” \(\sigma\) between 
+pyramid levels \(l\) and \(2l\) is consistently \(\sqrt{2}\sigma\) (take note, this approach is also used in SIFT <a href="https://goo.gl/A6tVe9">@lowe2004distinctive</a>).</p>
+
+<p>The Gaussian pyramid of <a href="https://goo.gl/QGupMh">@crowley2002fast</a> introduces stages each of which incorporates a sequence of pyramid levels (3) of the same size. 
+We will write \(p^s_l\) to denote level \(l\) of stage \(s\). The algorithm for constructing this Gaussian pyramid is as follows:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+p^s_0 = 
+\begin{cases}
+s=0 & \text{I} * g_{\sigma}\\
+s>0 & p^{s-1}_2(2x,2y)
+\end{cases}\\
+p^s_1 = p^s_0 * g_{\sigma}\\
+p^s_2 = p^s_1 * g_{\sigma} * g_{\sigma} %]]></script>
+
+<p>where \(I\) is the input image, and \(g_\sigma\) is fixed.</p>
+
+<h3 id="a-closer-look-1">A closer look<a id="sec-3-1-1" name="sec-3-1-1"></a></h3>
+
+<p>To clarify why this works we examine stage 0 and stage 1, you’ll have to convince yourself for other stages. For stage 0, \(s=0\), we have the following</p>
+
+<table id="tab:stage0" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 1:</span> Stage 0: levels and effective \\(\sigma\\)</caption>
+
+<colgroup>
+<col class="right" />
+
+<col class="right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="right">level</th>
+<th scope="col" class="right">"&sigma;"</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="right">0</td>
+<td class="right">1</td>
+</tr>
+
+
+<tr>
+<td class="right">1</td>
+<td class="right">&radic;<span style="text-decoration:overline;">&nbsp;2&nbsp;</span></td>
+</tr>
+
+
+<tr>
+<td class="right">2</td>
+<td class="right">2</td>
+</tr>
+</tbody>
+</table>
+
+<p>And for stage 1, \(s=1\)</p>
+
+<table id="tab:stage1" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 2:</span> Stage 1: levels and effective &amp;sigma</caption>
+
+<colgroup>
+<col class="right" />
+
+<col class="right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="right">level</th>
+<th scope="col" class="right">"&sigma;"</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="right">0</td>
+<td class="right">2</td>
+</tr>
+
+
+<tr>
+<td class="right">1</td>
+<td class="right">&radic;<span style="text-decoration:overline;">&nbsp;2&nbsp;</span></td>
+</tr>
+
+
+<tr>
+<td class="right">2</td>
+<td class="right">4</td>
+</tr>
+</tbody>
+</table>
+
+<p>The downsampling between stages allows us to maintain a fixed “effective” \(\sigma\) ratio between levels while keeping the filter fixed. Without 
+downsampling, the “effective” \(\sigma\) level relationship in stage 1 would be,</p>
+
+<table id="tab:stage1_nodown" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 3:</span> Stage 1: levels and effective \\(\sigma\\) without downsampling</caption>
+
+<colgroup>
+<col class="right" />
+
+<col class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="right">level</th>
+<th scope="col" class="left">"&sigma;"</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="right">0</td>
+<td class="left">2</td>
+</tr>
+
+
+<tr>
+<td class="right">1</td>
+<td class="left">&radic;<span style="text-decoration:overline;">&nbsp;5&nbsp;</span></td>
+</tr>
+
+
+<tr>
+<td class="right">2</td>
+<td class="left">&radic;<span style="text-decoration:overline;">&nbsp;7&nbsp;</span></td>
+</tr>
+</tbody>
+</table>
+
+<p>Downsampling effectively doubles the \(\sigma\) of our filter allowing us to maintain both a fixed “effective” \(\sigma\) ratio and fixed procedure
+for generating Gaussian pyramid levels</p>
+
+<p><img src="../figures/laplacian_gauss_pyr.png" alt="img" title="Gaussian pyramid adapted from [@crowley2002fast](https://goo.gl/QGupMh)" /></p>
+
+<h2 id="difference-of-gaussian-as-an-approximation-for-the-laplacian-of-gaussian">Difference of Gaussian as an approximation for the Laplacian of Gaussian<a id="sec-3-2" name="sec-3-2"></a></h2>
+
+<p>Normalizing the Laplacian with a factor of \(\sigma^2\) is required for true scale invariance <a href="https://goo.gl/hMH9ZE">@lindeberg1994scale</a>.
+Maxima and minima of the Laplacian are more stable than those of the Hessian, gradient or Harris corner <a href="https://goo.gl/GiiV8P">@mikolajczyk2002detection</a>.</p>
+
+<p>The Laplacian pyramid is constructed by taking the difference of Gaussian pyramid levels. 
+The derivative of the Gaussian, \(g_{\sigma}\), with respect to \(\sigma\) can be expressed</p>
+
+<script type="math/tex; mode=display">\frac{\partial}{\partial \sigma} g_{\sigma} = \frac{\partial}{\partial \sigma}\left( \frac{1}{\sigma^2} e^{-(x^2 + y^2)/2\sigma^2}\right) \\
+= \left(\frac{\partial}{\partial \sigma} \frac{1}{\sigma^2}\right) e^{-(x^2 + y^2)/2\sigma^2} + \frac{1}{\sigma^2} \left(\frac{\partial}{\partial \sigma} e^{-(x^2 + y^2)/2\sigma^2}\right)\\
+= - \frac{2}{\sigma^3} e^{-(x^2 + y^2)/2\sigma^2} + \frac{1}{\sigma^2} \left( \frac{x^2 + y^2}{\sigma^3} e^{-(x^2 + y^2)/2\sigma^2} \right)\\
+= \left( \frac{ (x^2 + y^2) }{\sigma^5} - \frac{2}{\sigma^3} \right) e^{-(x^2 + y^2)/2\sigma^2}.</script>
+
+<p>Laplacian of Gaussian with respect to \(r^2 = x^2 + y^2\) is</p>
+
+<script type="math/tex; mode=display">\frac{\partial^2}{\partial r^2} g_{\sigma} = \frac{\partial^2}{\partial r^2}\left( \frac{1}{\sigma^2} e^{-r^2/2\sigma^2}\right) \\
+= -\frac{\partial}{\partial r}\left(\frac{r}{\sigma^2}\frac{1}{\sigma^2} e^{-r^2/2\sigma^2}\right) \\
+= -\left(\frac{\partial}{\partial r}\frac{r}{\sigma^4}\right) e^{-r^2/2\sigma^2} + \frac{r}{\sigma^4}\left(\frac{\partial}{\partial r} e^{-r^2/2\sigma^2} \right)\\
+= -\left(\frac{1}{\sigma^4}\right) e^{-r^2/2\sigma^2} + \frac{r}{\sigma^4}\left(-\frac{r}{\sigma^2} e^{-r^2/2\sigma^2} \right)\\
+= -\left(\frac{1}{\sigma^4} - \frac{r^2}{\sigma^6}\right) e^{-r^2/2\sigma^2}.</script>
+
+<p>Relating the two we have,</p>
+
+<script type="math/tex; mode=display">\frac{\partial}{\partial \sigma} g_{\sigma} = \sigma \frac{\partial^2}{\partial r^2} g_{\sigma}.</script>
+
+<p>Since the derivative can be approximated by a difference over the magnitude in change of the variable, we can write</p>
+
+<script type="math/tex; mode=display">\frac{\partial}{\partial \sigma} g_{\sigma} \approx \frac{g_{\sigma + \Delta\sigma} - g_{\sigma}}{\Delta\sigma}\\
+\Delta\sigma \left(\sigma \frac{\partial^2}{\partial r^2} g_{\sigma}\right) \approx g_{\sigma + \Delta\sigma} - g_{\sigma}.</script>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="n">plt</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+    
+    <span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">data</span>
+    <span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">convolve2d</span>
+    
+    <span class="k">def</span> <span class="nf">disp_fmt_pyr</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="n">laplace</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="s">"""
+        Visualize the Laplacian pyramid
+        """</span>
+        <span class="n">num_levels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+        <span class="n">num_stages</span> <span class="o">=</span> <span class="n">num_levels</span><span class="o">/</span><span class="mi">2</span>
+    
+        <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">pyr</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">shape</span>
+    
+        <span class="n">img_heights</span> <span class="o">=</span> <span class="p">[</span> <span class="n">H</span> <span class="o">*</span> <span class="mf">2.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_stages</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span> <span class="n">img_heights</span> <span class="p">))</span>
+    
+        <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+    
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_stages</span><span class="p">):</span>
+            <span class="n">rstart</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">img_heights</span><span class="p">[:</span><span class="n">i</span><span class="p">]))</span>
+            <span class="n">rend</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">int</span><span class="p">(</span><span class="n">rstart</span> <span class="o">+</span> <span class="n">img_heights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
+            <span class="n">out</span><span class="p">[</span><span class="n">rstart</span><span class="p">:</span><span class="n">rend</span><span class="p">,</span> <span class="p">:</span><span class="n">np</span><span class="p">.</span><span class="nb">int</span><span class="p">(</span><span class="n">img_heights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">pyr</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">],</span> <span class="n">pyr</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>
+    
+        <span class="k">return</span> <span class="n">out</span>
+    
+    
+    <span class="k">def</span> <span class="nf">laplace_pyr</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">stages</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="s">"""
+        Compute the Laplacian pyramid
+    
+        Inputs:
+        - img: Input image of size (N,M)
+        - stages: Number of stages for the Laplacian pyramid
+    
+        Returns:
+        A tuple of stages*2 images 
+        """</span>
+    
+        <span class="c1"># approximate length 5 Gaussian filter using binomial filter
+</span>        <span class="n">filt</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="mi">16</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="n">filt2</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">pad</span><span class="p">(</span> <span class="n">filt</span><span class="p">,</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s">'constant'</span> <span class="p">)</span>
+        <span class="n">filt2</span> <span class="o">=</span> <span class="n">convolve2d</span><span class="p">(</span> <span class="n">filt2</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="s">'valid'</span><span class="p">)</span>
+    
+        <span class="c1"># approximate 2D Gaussian
+</span>        <span class="c1"># filt = convolve2d(filt, filt.T)
+</span>    
+        <span class="n">pyr</span> <span class="o">=</span> <span class="p">[]</span>
+    
+        <span class="n">old_img</span> <span class="o">=</span> <span class="n">img</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">stages</span><span class="p">):</span>
+            <span class="c1"># zero pad the previous image for convolution
+</span>            <span class="c1"># boarder of 2 since filter is of length 5
+</span>            <span class="n">p_0</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">pad</span><span class="p">(</span> <span class="n">old_img</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">mode</span><span class="o">=</span><span class="s">'constant'</span> <span class="p">)</span>
+    
+            <span class="c1"># convolve in the x and y directions to construct p_1
+</span>            <span class="n">p_1</span> <span class="o">=</span> <span class="n">convolve2d</span><span class="p">(</span> <span class="n">p_0</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="s">'valid'</span> <span class="p">)</span>
+            <span class="n">p_1</span> <span class="o">=</span> <span class="n">convolve2d</span><span class="p">(</span> <span class="n">p_1</span><span class="p">,</span> <span class="n">filt</span><span class="p">.</span><span class="n">T</span><span class="p">,</span> <span class="s">'valid'</span> <span class="p">)</span>
+    
+            <span class="c1"># DoG approximation of LoG
+</span>            <span class="n">pyr</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">p_1</span> <span class="o">-</span> <span class="n">p_0</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="p">)</span>
+    
+            <span class="c1"># convolve with scaled gaussian \sigma_2 = \sqrt(2)\sigma_1
+</span>            <span class="c1"># this is implemented by cascaded convolution
+</span>            <span class="n">p_1</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">pad</span><span class="p">(</span> <span class="n">p_1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">mode</span><span class="o">=</span><span class="s">'constant'</span> <span class="p">)</span>
+            <span class="n">p_2</span> <span class="o">=</span> <span class="n">convolve2d</span><span class="p">(</span> <span class="n">p_1</span><span class="p">,</span> <span class="n">filt2</span><span class="p">,</span> <span class="s">'valid'</span> <span class="p">)</span>
+            <span class="n">p_2</span> <span class="o">=</span> <span class="n">convolve2d</span><span class="p">(</span> <span class="n">p_2</span><span class="p">,</span> <span class="n">filt2</span><span class="p">.</span><span class="n">T</span><span class="p">,</span> <span class="s">'valid'</span> <span class="p">)</span>
+    
+            <span class="c1"># DoG approximation of LoG
+</span>            <span class="n">pyr</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">p_2</span> <span class="o">-</span> <span class="n">p_1</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="p">)</span>
+    
+            <span class="c1"># subsample p_2 for next stage
+</span>            <span class="n">old_img</span> <span class="o">=</span> <span class="n">p_2</span><span class="p">[::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span>
+    
+        <span class="k">return</span> <span class="n">pyr</span>
+    
+    
+    <span class="n">camera</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">camera</span><span class="p">()</span>
+    <span class="n">pyr</span> <span class="o">=</span> <span class="n">laplace_pyr</span><span class="p">(</span><span class="n">camera</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">disp_fmt_pyr</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">'figures/laplace_pyr.png'</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s">"tight"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="s">'figures/laplace_pyr.png'</span>
+</code></pre></div></div>
+
+<p><img src="../figures/laplace_pyr.png" alt="img" title="Laplacian pyramid" /></p>
+
+<h1 id="sift-scale-invariant-feature-transform">SIFT: Scale Invariant Feature Transform<a id="sec-4" name="sec-4"></a></h1>
+
+<p>SIFT is an approach for identifying and describing image regions useful for tasks such as image recognition and retrieval.
+The approach is two stage, the first stage is detection which uses ideas from automatic scale selection <a href="https://goo.gl/RRxkQf">@lindeberg1998edge</a>
+and Harris Corners <a href="https://goo.gl/GSrmxK">@harris1988combined</a> to identify stable scale invariant features.
+The second stage is description, a representation of the feature is constructed using a histogram of oriented gradients <a href="https://goo.gl/A6tVe9">@lowe2004distinctive</a>.
+This discription method gained significant popularity after <a href="https://goo.gl/A6tVe9">@lowe2004distinctive</a> through the work of 
+<a href="https://goo.gl/L16SYM">@dalal2005histograms</a> and <a href="https://goo.gl/kW5HJj">@felzenszwalb2010object</a>.</p>
+
+<h2 id="scale-invariant-detection">Scale invariant detection<a id="sec-4-1" name="sec-4-1"></a></h2>
+
+<p>In <a href="https://goo.gl/A6tVe9">@lowe2004distinctive</a> scale invariance is achieved by identifying distinctive locations \(p = (x, y, \sigma)\) in the
+scale-space representation of the image (i.e. the Laplacian pyramid). 
+These locations are characterized as being maximal in absolute value within their local neighborhood
+(i.e. eight neighbors in the same scale, and nine neighbors in both the scale above and below for a total of 26 neighbors).
+The detection is scale invariant since a feature can be detected and matched across images of different scales as long as the “inherent” 
+scale of the feature is represented in the scale-space representations of both images.</p>
+
+<h2 id="rotation-invariant-descriptor">Rotation invariant descriptor<a id="sec-4-2" name="sec-4-2"></a></h2>
+
+<p>Although the name does not reveal the orientation invariance of the descriptor this characteristic is important for robust and repeatable
+detection. The SIFT descriptor is a histogram of oriented gradients. At the detection scale the orientation and magnitude
+of each point in the feature neighborhood is computed. These orientations are bined into a histogram where their contribution to 
+the bin count is weighted by the magnitude of the gradient and the distance of the neighbor from the detected feature.
+The dominant orientation (the bin with the highest count) is refered to as the keypoint orientation. The coordinates 
+of descriptor (histogram) are shfited relative to this orientation making the descriptor rotation invariant.</p>
+
+<h2 id="a-closer-look-2">A closer look<a id="sec-4-3" name="sec-4-3"></a></h2>
+
+<h3 id="pyramid-construction">Pyramid construction<a id="sec-4-3-1" name="sec-4-3-1"></a></h3>
+
+<ol>
+  <li>
+    <p>Frequency of sampling in scale</p>
+  </li>
+  <li>
+    <p>Frequency of spatial sampling</p>
+  </li>
+</ol>
+
+<h3 id="accurate-keypoint-localization-and-thresholding">Accurate keypoint localization and thresholding<a id="sec-4-3-2" name="sec-4-3-2"></a></h3>
+
+<p>A candidate feature is found by nonmaximum suppression. A 3D quadratic function is fit to the candidate feature and its neighbors
+where the candidate feature is assumed to be the centroid. The location of the extremum is determined by taking the derivative of 
+the quadratic and setting it to zero. If the solution computed here is more than \(0.5\) from the candidate feature the extremum is 
+closer to one of the other sample points and the interpolation is computed about that point instead. If the function value at the 
+extrema is small (less than 0.03 in the paper) the point is discarded as unstable due to low contrast.</p>
+
+<p>A candidate feature will also result on edges where localization of the extrema is poorly determined. These cases are eliminated by 
+the metric introduced in <a href="https://goo.gl/GSrmxK">@harris1988combined</a>. The autocorrelation matrix is formed the eigenvalues of which illucidate the 
+cornerness of the region.</p>
+
+<h3 id="other-invariances">Other invariances<a id="sec-4-3-3" name="sec-4-3-3"></a></h3>
+
+<p>linear and non-linear illumination</p>
+
+<p><img src="../figures/sift_increasing_robustness.png" alt="img" title="Adapted from  [@lowe2004distinctive](https://goo.gl/A6tVe9)" /></p>
+
+
+
+
+  <small>tags: <em></em></small>
+
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="https://github.com/cablanc">cablanc</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    
+  </body>
+</html>
