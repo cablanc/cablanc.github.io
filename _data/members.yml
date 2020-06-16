@@ -1,8 +1,8 @@
-- title: Courses
+- title: Course notes
   url: /page1.html
 
 - title: Readings
   url: /readings.html
 
 - title: CV
-  url: /cv.pdf
+  url: /assets/cv.pdf
