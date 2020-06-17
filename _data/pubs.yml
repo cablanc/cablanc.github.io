@@ -1,11 +1,19 @@
-- title: Carlos Esteves, Yinshuang Xu, Christine Allen-Blanchette, Kostas Daniilidis, Equivariant Multi-View Networks, ICCV 2019 (Oral)
+- author: Carlos Esteves, Yinshuang Xu, Christine Allen-Blanchette, Kostas Daniilidis
+  title: Equivariant Multi-View Networks
+  venue: ICCV 2019 (Oral)
   url: https://arxiv.org/pdf/1904.00993
 
-- title: Carlos Esteves, Christine Allen-Blanchette, Ameesh Makadia, Kostas Daniilidis, Learning SO(3) Equivariant Representations with Spherical CNNs, ECCV 2018 (Oral)
+- author: Carlos Esteves, Christine Allen-Blanchette, Ameesh Makadia, Kostas Daniilidis
+  title: Learning SO(3) Equivariant Representations with Spherical CNNs
+  venue: ECCV 2018 (Oral)
   url: https://arxiv.org/pdf/1711.06721
 
-- title: Carlos Esteves, Christine Allen-Blanchette, Xiaowei Zhou, Kostas Daniilidis, Polar Transformer Networks, ICLR 2018
+- author: Carlos Esteves, Christine Allen-Blanchette, Xiaowei Zhou, Kostas Daniilidis
+  title: Polar Transformer Networks
+  venue: ICLR 2018
   url: http://openaccess.thecvf.com/content_ICCV_2017/papers/Tron_Fast_Multi-Image_Matching_ICCV_2017_paper.pdf
 
-- title:  Spyridon Leonardos, Christine Allen-Blanchette, Jean Gallier, The exponential map for the group of similarity transformations and applications to motion interpolation, ICRA 2015
+- author: Spyridon Leonardos, Christine Allen-Blanchette, Jean Gallier
+  title: The exponential map for the group of similarity transformations and applications to motion interpolation
+  venue: ICRA 2015
   url: https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjXo57d8ojqAhUeRDABHbMfAssQFjAAegQIARAB&url=https%3A%2F%2Fwww.cis.upenn.edu%2F~jean%2Finterp-SIM.pdf&usg=AOvVaw1paHw--iCN9k2mLLyVazkr
