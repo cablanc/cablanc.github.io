@@ -29,8 +29,12 @@
 
       <section>
 
-      {{ content }}
-
+	{{ content }}
+	
+	<h4>Publications</h4>
+	{% for page in site.data.pubs %}
+	  <p>{{page.title}} [<a href= {{page.url}}>pdf</a>]</p>
+	{% endfor %}
       </section>
       <footer>
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
