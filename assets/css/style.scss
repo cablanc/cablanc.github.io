@@ -4,3 +4,4 @@
 @import "{{ site.theme }}";
 .nav { all: initial; text-align: left; }
 
+footer { width: 270px; float: left; position: fixed; bottom: 30px; -webkit-font-smoothing: subpixel-antialiased; }

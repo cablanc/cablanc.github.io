@@ -213,3 +213,5 @@ footer { width: 270px; float: left; position: fixed; bottom: 50px; -webkit-font-
   header li, header ul li + li + li { width: 33%; } }
 @media print { body { padding: 0.4in; font-size: 12pt; color: #444; } }
 .nav { all: initial; text-align: left; }
+
+footer { width: 270px; float: left; position: fixed; bottom: 30px; -webkit-font-smoothing: subpixel-antialiased; }

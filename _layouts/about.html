@@ -33,7 +33,7 @@
 	
 	<h3>Publications</h3>
 	{% for page in site.data.pubs %}
-	  <p>{{page.author}}, <b>{{page.title}}</b>, {{page.venue}} [<a href= {{page.url}}>pdf</a>]</p>
+	  <p>{{page.author}}, <a href= {{page.url}}>{{page.title}}</a>, {{page.venue}} <b>{{page.note}}</b></p>
 	{% endfor %}
 
       </section>
