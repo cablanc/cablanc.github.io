@@ -1,5 +1,6 @@
 ---
 title: Laplacian Pyramids
+tags: [Machine Perception]
 ---
 
 These notes cover the construction and theory of Gaussian and Laplacian pyramids, and the SIFT detector/descriptor.

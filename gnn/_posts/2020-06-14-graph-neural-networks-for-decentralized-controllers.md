@@ -1,5 +1,6 @@
 ---
 title: Graph Neural Networks For Decentralized Controllers
+tags: [Graph Neural Networks]
 ---
 
 This paper describes the application of graph convolutional 

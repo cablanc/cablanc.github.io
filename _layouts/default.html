@@ -22,9 +22,9 @@
 
         <p>{{ site.description | default: site.github.project_tagline }}</p>
 
-	{% for page in site.data.pages %}
+	{%- for page in site.data.pages -%}
 	<h4><a href= {{page.url}}>{{page.title}}</a></h4>
-	{% endfor %}
+	{%- endfor -%}
       </header>
 
       <section>

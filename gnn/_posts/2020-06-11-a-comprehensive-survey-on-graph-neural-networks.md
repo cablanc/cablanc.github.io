@@ -1,5 +1,6 @@
 ---
 title: A Comprehensive Survey on Graph Neural Networks
+tags: [Graph Neural Networks]
 ---
 
 

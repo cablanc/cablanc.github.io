@@ -215,3 +215,5 @@ footer { width: 270px; float: left; position: fixed; bottom: 50px; -webkit-font-
 .nav { all: initial; text-align: left; }
 
 footer { width: 270px; float: left; position: fixed; bottom: 30px; -webkit-font-smoothing: subpixel-antialiased; }
+
+.postlist { list-style: none; }
