@@ -2,3 +2,7 @@ theme: jekyll-theme-minimal
 title: Christine Allen-Blanchette
 logo: /assets/img/logo.png
 show_downloads: false
+collections:
+  gnn:
+    output: true
+  course_materials:

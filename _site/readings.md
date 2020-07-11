@@ -1,10 +1,8 @@
 <ul>
-  {% for post in site.posts %}
-  {% if post.categories contains 'gnn' %}
+  {% for post in site.gnn %}
     <li>
-      <a href="{{ post.url }}">{{ post.title }}</a>
-      {{ post.excerpt }}
+      <a href="{{ post.url }}"/a>
+      {{ post.content }}
     </li>
-  {% endif %}
   {% endfor %}
 </ul>
