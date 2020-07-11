@@ -1,5 +1,6 @@
 ---
 title: Graph Neural Networks For Decentralized Controllers
+excerpt_separator: <!--more-->
 tags: [Graph Neural Networks]
 ---
 
@@ -7,6 +8,7 @@ This paper describes the application of graph convolutional
 neural networks (GCNNs) and graph recurrent neural networks (GRNNs)
 to the problem of learning a decentralized controller.
 Determination of an optimal decentralized controller is challenging
+<!--more-->
 since an agent's action is determined by its local neighborhood rather
 than all agent states. In the GCNN framework a nonlinear map is 
 learned from the system state to the control action and 
