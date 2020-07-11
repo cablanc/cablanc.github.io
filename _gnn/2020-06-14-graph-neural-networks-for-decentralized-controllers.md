@@ -2,6 +2,9 @@
 title: Graph Neural Networks For Decentralized Controllers
 excerpt_separator: <!--more-->
 tags: [Graph Neural Networks]
+pdf: https://arxiv.org/abs/2003.10280
+layout: post
+nb: https://mybinder.org/v2/gh/cablanc/graph-neural-networks/be85f4f228c7a1a7427d81a83ef511954f917989
 ---
 
 This paper describes the application of graph convolutional 

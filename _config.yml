@@ -5,7 +5,8 @@ show_downloads: false
 collections:
   gnn:
     type: reading
+    output: true
   courses:
     type: course
-
+    output: true
 
