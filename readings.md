@@ -6,8 +6,8 @@
     <p>
       {{ post.date | date: "%Y-%m-%d" }}
       <b>{{ post.title }}</b><br>
-      {{ post.excerpt | strip_html | truncate: 200 }}<br>
-      <a href="{{ post.pdf }}">[paper]</a> <a href="{{ post.url }}">[summary]</a> <a href="{{ post.nb }}">[ipynb]</a> 
+      <small>SUMMARY EXCERPT: </small>{{ post.excerpt | strip_html | truncate: 200 }}<br>
+      <a href="{{ post.url }}">[summary]</a> <a href="{{ post.nb }}">[ipynb]</a> <a href="{{ post.pdf }}">[paper]</a>
     </p>
   {% endfor %}
   {% endfor %}
