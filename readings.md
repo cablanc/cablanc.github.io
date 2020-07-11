@@ -4,9 +4,10 @@
   <h3>{{ collection.docs[0].tags }}</h3>
   {% for post in collection.docs limit:5 %}
     <p>
-      <b>{{ post.date | date: "%Y-%m-%d" }}</b>
-      <a href="{{ post.pdf }}">{{ post.title }}</a><br>
-      <a href="{{ post.nb }}">[nb]</a> <a href="{{ post.url }}">[post]</a> {{ post.excerpt | strip_html | truncate: 200 }}
+      {{ post.date | date: "%Y-%m-%d" }}
+      <b>{{ post.title }}</b><br>
+      {{ post.excerpt | strip_html | truncate: 200 }}<br>
+      <a href="{{ post.pdf }}">[paper]</a> <a href="{{ post.url }}">[summary]</a> <a href="{{ post.nb }}">[ipynb]</a> 
     </p>
   {% endfor %}
   {% endfor %}
