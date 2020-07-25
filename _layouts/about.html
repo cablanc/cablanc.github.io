@@ -25,6 +25,7 @@
 	{% for page in site.data.pages %}
 	<h4><a href= {{page.url}}>{{page.title}}</a></h4>
 	{% endfor %}
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </header>
 
       <section>
@@ -36,10 +37,11 @@
 	  <p>{{page.author}}, <a href= {{page.url}}>{{page.title}}</a>, {{page.venue}} <b>{{page.note}}</b></p>
 	{% endfor %}
 
+	<h3>Contact</h3>
+	<p><b>Email:</b> ca15 [at] princeton.edu</p>
+		
+
       </section>
-      <footer>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
     </div>
     <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
     {% if site.google_analytics %}
