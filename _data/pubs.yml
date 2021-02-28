@@ -1,3 +1,9 @@
+- author: Christine Allen-Blanchette, Sushant Veer, Anirudha Majumdar, Naomi Ehrich Leonard
+  title: LagNetViP: A Lagrangian Neural Network for Video Prediction
+  venue: PGAI-AAAI 2020 
+  url: https://arxiv.org/abs/2010.12932
+  note:
+  
 - author: Carlos Esteves, Yinshuang Xu, Christine Allen-Blanchette, Kostas Daniilidis
   title: Equivariant Multi-View Networks
   venue: ICCV 2019 
