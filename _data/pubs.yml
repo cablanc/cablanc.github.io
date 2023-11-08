@@ -1,4 +1,10 @@
-- author: Justice Mason, Christine Allen-Blanchette, Nicholas Zolman, Elizabeth Davison, Naomi Ehrich Leonard
+- author: Justice Mason*, Christine Allen-Blanchette*, Nicholas Zolman, Elizabeth Davison, Naomi Ehrich Leonard
+  title: "Learning to predict 3D rotational dynamics from images of a rigid body with unknown mass distribution"
+  venue: Aerospace 2023
+  url: https://www.mdpi.com/2226-4310/10/11/921
+  note: 
+
+- author: Justice Mason*, Christine Allen-Blanchette*, Nicholas Zolman, Elizabeth Davison, Naomi Ehrich Leonard
   title: "Learning Interpretable Dynamics from Images of a Freely Rotating 3D Rigid Body"
   venue: KGML-AAAI 2022 
   url: https://arxiv.org/pdf/2209.11355.pdf
