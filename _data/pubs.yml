@@ -1,6 +1,6 @@
 - author: Felix O'Mahony, Yulong Yang, Christine Allen-Blanchette
   title: "Color equivariant network"
-  venue: CVPR Workshop: Equivision 2024 
+  venue: CVPR Workshop Equivision 2024 
   url: https://arxiv.org/pdf/2406.09588
   note: 
 
@@ -18,7 +18,7 @@
 
 - author: Matthew Coleman, Olga Russakovsky, Christine Allen-Blanchette, Ye Zhu
   title: "Discrete Diffusion Reward Guidance Methods for Offline Reinforcement Learning"
-  venue: ICML Workshop: Sampling and Optimization in Discrete Space 2023 
+  venue: ICML Workshop Sampling and Optimization in Discrete Space 2023 
   url: https://www.mdpi.com/2226-4310/10/11/921
   note: 
 
