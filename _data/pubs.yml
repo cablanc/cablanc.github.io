@@ -1,3 +1,15 @@
+- author: Yulong Yang*, Felix O'Mahony*, Christine Allen-Blanchette
+  title: "Learning color equivariant representations"
+  venue: ICLR 2025
+  url: https://arxiv.org/pdf/2406.09588
+  note: 
+  
+- author: Yulong Yang*, Bowen Feng*, Kevin Wang, Naomi Ehrich Leonard, Adji Busso Dieng, Christine Allen-Blanchette
+  title: "Behavior-inspired neural networks for relational inference"
+  venue: AISTATS 2025
+  url: https://arxiv.org/pdf/2406.14746
+  note: 
+  
 - author: Felix O'Mahony, Yulong Yang, Christine Allen-Blanchette
   title: "Color equivariant network"
   venue: CVPR Workshop Equivision 2024 
